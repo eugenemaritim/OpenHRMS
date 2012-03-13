@@ -1,0 +1,88 @@
+<?php
+
+$this->headLink()
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.core.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.resizable.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.dialog.css'))
+        ->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.tabs.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.theme.css'));
+
+$this->headScript()
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.core.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.draggable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.resizable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.dialog.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.tabs.js'))
+	->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span>Generate Employee Roll</span>
+</div>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_9 alpha">You can use following conditions to filter the list of employees:</div>
+
+</div>
+
+<!-- Filter form -->
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1" id="filerContainer">
+            <form name="EmployeeFilter" id="" method="post" action="<?php echo $this->url(array('controller'=>'report', 'action'=>'employee-list'))?>">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_5 alpha">
+				<label>Job Title:</label>
+                                <select name="job_title" style="width: 180px">
+                                    <option value="">---</option>
+                                    <?php foreach($this->job_titles as $job_title) :?>
+                                    <option value="<?php echo $job_title->id?>"><?php echo $job_title->name; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+			</div>
+
+			<div class="grid_5 omega">
+				<label>Department:</label>
+				<select name="dept_id" style="width: 180px">
+					<option value="">---</option>
+					<?php foreach ($this->departments as $dept) : ?>
+					<option value="<?php echo $dept->dept_id; ?>"><?php echo $dept->name; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		</div>
+
+		<hr />
+
+                <div class="clearfix t_a_bottom">
+                        <div class="grid_5 alpha">
+				<label>Job Group:</label>
+                                <select name="job_title" style="width: 180px">
+                                    <option value="">---</option>
+                                    <?php foreach($this->job_groups as $job_group) :?>
+                                    <option value="<?php echo $job_group->id?>"><?php echo $job_group->name; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+			</div>
+			<div class="grid_5 omega">
+				<label>Bank:</label>
+                                <select name="bank_id" style="width: 180px">
+                                    <option value="">---</option>
+                                    <?php foreach($this->banks as $bank) { ?>
+                                    <option value="<?php echo $bank->id; ?>"><?php echo $bank->name; ?></option>
+                                    <?php } ?>
+                                </select>
+			</div>
+		</div>
+
+                <hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+			<button type="submit" id="filterButton"><span>Generate Employee Roll</span></button>
+		</div>
+            </form>
+	</div>
+</div>
+<div id="messageDialog"></div>
+
+

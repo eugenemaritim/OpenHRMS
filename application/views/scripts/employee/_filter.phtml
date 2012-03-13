@@ -1,0 +1,24 @@
+<?php if (count($this->employees) == 0) : ?>
+<div class="grid_12 t_a_bottom">There are no employees in the system that match the criteria</div>
+<?php else : ?>
+<?php foreach ($this->paginator as $emp) : ?>
+		<div class="clearfix t_a_ui_data_list_content">
+			<div class="grid_6 alpha">
+				<div><?php echo $emp->surname; ?>, <?php echo $emp->other_name?></div>
+
+				<div class="t_a_top t_a_ui_helper_action">
+                                        <a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view','emp' => $emp->emp_id)); ?>">View Employee</a>
+
+				</div>
+			</div>
+
+			<div class="grid_3"><?php echo $this->department()->getDepartmentName($emp->dept_id); ?><?php  ?></div>
+
+			<div class="grid_3 omega"><?php echo $this->jobTitle()->getJobTitleName($emp->job_title); ?></div>
+		</div>
+		<?php endforeach; ?>
+
+		<div class="t_a_bottom t_a_ui_paginator">
+			<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+</div>
+<?php endif; ?>

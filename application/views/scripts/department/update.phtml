@@ -1,0 +1,72 @@
+<?php
+
+$this->headScript()->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span><a href="<?php echo $this->url(array('controller'=>'department', 'action'=>'list')); ?>">List of Departments</a></span>
+	<span>Edit Department <?php echo $this->dept->name; ?></span>
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<form method="post" action="<?php echo $this->url(array('controller'=>'department', 'action'=>'update')); ?>" id="editDeptForm">
+<div class="grid_12 t_a_bottom">Update Department Information as necessary:</div>
+
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1">
+            <input type="hidden" name="dept_id" value="<?php echo $this->dept->dept_id; ?>" />
+		<div class="clearfix t_a_bottom">
+			<label>Name:</label>
+			<input type="text" style="width: 200px" name="name" id="name" value="<?php echo $this->dept->name; ?>"/>
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Description:</label>
+			<input type="text" style="width: 200px" name="description" id="description" value="<?php echo $this->dept->description; ?>" />
+		</div>
+
+		<hr />
+
+		<div class="clearfix">
+			<label>&nbsp;</label>
+			<input type="checkbox" name="lock" value="<?php echo $this->dept->is_active; ?>" <?php if($this->dept->is_active == 1) {echo ' checked="checked"'; } ?> /> Lock this Department
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+                        <button type="submit"><span>Save Changes</span></button> or <a href="<?php echo $this->url(array('controller'=>'department', 'action'=>'list'), null, true)?>">Cancel</a>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Validate form
+	 */
+	$('#editDeptForm').validate({
+		rules: {
+			name: {
+				required: true
+			},
+			description: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	name: {
+	        	required: "<?php echo addslashes("The department name is required"); ?>"
+			},
+			description: {
+	        	required: "<?php echo addslashes("The department description is required"); ?>"
+			}
+		}
+	});
+});
+</script>

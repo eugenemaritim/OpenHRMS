@@ -1,0 +1,97 @@
+<?php
+
+$this->headScript()->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span><a href="<?php echo $this->url(array('controller'=>'deduction', 'action'=>'list')); ?>">List of Deductions</a></span>
+	<span>Edit Deduction <?php echo $this->deduction->name; ?></span>
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<form method="post" action="<?php echo $this->url(array('controller'=>'deduction', 'action'=>'update')); ?>" id="editDeductionForm">
+<div class="grid_12 t_a_bottom">Enter the deduction information in the form:</div>
+
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1">
+                <input type="hidden" name="id" value="<?php echo $this->deduction->id; ?>" />
+		<div class="clearfix t_a_bottom">
+			<label>Name:</label>
+			<input type="text" style="width: 200px" name="name" id="name" value="<?php echo $this->deduction->name; ?>"/>
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Description:</label>
+			<input type="text" style="width: 200px" name="description" id="description" value="<?php echo $this->deduction->description; ?>"/>
+		</div>
+
+		<hr />
+
+                <div class="clearfix t_a_bottom">
+			<label>Amount:</label>
+			<input type="text" style="width: 200px" name="amount" id="amount" value="<?php echo $this->deduction->amount; ?>" />
+		</div>
+
+		<hr />
+
+                <div class="clearfix t_a_bottom">
+			<label>Job Group:</label>
+			<select name="job_group" style="width: 180px">					
+					<?php foreach ($this->job_groups as $job_group) : ?>
+					<option value="<?php echo $job_group->id; ?>"
+                                        <?php if($job_group->id == $this->deduction->job_group) { ?>
+                                        selected="selected"
+                                        <?php } ?>
+                                        ><?php echo $job_group->name; ?></option>
+					<?php endforeach; ?>
+			</select>
+
+		</div>
+
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+			<button type="submit"><span>Save Changes</span></button>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Validate form
+	 */
+	$('#editDeductionForm').validate({
+		rules: {
+			name: {
+				required: true
+			},
+			description: {
+				required: true
+			},
+                        amount: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	name: {
+	        	required: "<?php echo addslashes("The deduction name is required"); ?>"
+			},
+			description: {
+	        	required: "<?php echo addslashes("The deduction description is required"); ?>"
+			},
+                        amount: {
+	        	required: "<?php echo addslashes("The deduction amount is required"); ?>"
+			}
+		}
+	});
+
+       
+});
+</script>

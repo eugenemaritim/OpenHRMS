@@ -1,0 +1,106 @@
+<?php
+
+$this->headScript()->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'list')); ?>">List of Employees</a></span>
+	<span>Add New Employee</span>
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<form method="post" action="<?php echo $this->url(array('controller'=>'employee', 'action'=>'add')); ?>" id="addEmployeeForm">
+<div class="grid_12 t_a_bottom">Enter Employee information in the form:</div>
+
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1">
+		<div class="clearfix t_a_bottom">
+			<label>Surname:</label>
+			<input type="text" id="surname" name="surname" style="width: 200px" />
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Other Names:</label>
+			<input type="text" id="other_name" name="other_name" style="width: 200px" />
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Department:</label>
+			<select name="department" id="department">
+				<option value="">---</option>
+				<?php foreach ($this->departments as $department) : ?>
+				<option value="<?php echo $department->dept_id; ?>"><?php echo $department->name; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+
+                <hr />
+
+                <div class="clearfix t_a_bottom">
+			<label>Job Title:</label>
+			<select name="job_title" id="job_title">
+				<option value="">---</option>
+				<?php foreach ($this->job_titles as $job_title) : ?>
+				<option value="<?php echo $job_title->id; ?>"><?php echo $job_title->name; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<hr />
+
+                <div class="clearfix t_a_bottom">
+			<label>Job Group:</label>
+			<select name="job_group" id="job_group">
+				<option value="">---</option>
+				<?php foreach ($this->job_groups as $job_group) : ?>
+				<option value="<?php echo $job_group->id; ?>"><?php echo $job_group->name; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+
+		<hr />
+		
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+			<?php echo $this->tokenElement; ?>
+                        <button type="submit"><span>Add Employee &rarr;</span></button> or <a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'list'), null, true)?>">Cancel</a>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Validate form
+	 */
+	$('#addEmployeeForm').validate({
+		rules: {
+			surname: {
+				required: true
+			},
+			other_name: {
+		  		required: true		  		
+			},						
+			department: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	surname: {
+	        	required: "Surname is required"
+	    	},
+	    	other_name: {
+	        	required: "Other Names are required"
+		},				    	
+		department: {
+			required: "Select a department for the employee"
+		}
+            }
+	});
+});
+</script>

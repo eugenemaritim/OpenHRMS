@@ -1,0 +1,25 @@
+<?php if (count($this->benefits) == 0) : ?>
+	No benefits matching selected criteria were found
+<?php else : ?>
+    <?php foreach ($this->benefits as $benefit) : ?>
+	<div class="clearfix t_a_ui_data_list_content" id="roleRow_<?php echo $benefit->id; ?>">
+		<div class="grid_2 alpha">
+			<div><?php echo $benefit->name; ?></div>
+
+			<div class="t_a_top t_a_ui_helper_action">
+				<a class="lockAction" rel="<?php echo $benefit->id; ?>_<?php echo $benefit->is_active; ?>_<?php echo $benefit->name; ?>" href="javascript: void(0);"><?php if ($benefit->is_active) : ?>Unlock<?php else : ?>Lock<?php endif; ?></a>                               
+				<?php  if (!$benefit->is_active) : ?> | <a class="editAction" href="/benefit/update/id/<?php echo $benefit->id; ?>">Edit</a> | <a class="deleteAction" rel="<?php echo $benefit->id; ?>_<?php echo $benefit->name; ?>" href="javascript: void(0);">Delete</a><?php endif; ?>
+			</div>
+		</div>
+
+		<div class="grid_4"><?php echo $benefit->description; ?>&nbsp;</div>
+
+                <div class="grid_2">Ksh <?php echo $benefit->amount; ?></div>
+
+		<div class="grid_1"><?php if ($benefit->is_active) : ?>Locked<?php else : ?>Unlocked<?php endif; ?></div>
+
+                <div class="grid_2"><?php echo $this->jobGroup()->getJobGroupName($benefit->job_group); ?></div>
+
+	</div>
+	<?php endforeach; ?>
+<?php endif; ?>

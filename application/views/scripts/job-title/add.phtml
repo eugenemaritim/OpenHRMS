@@ -1,0 +1,71 @@
+<?php
+
+$this->headScript()->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span><a href="<?php echo $this->url(array('controller'=>'job-title', 'action'=>'list')); ?>">List of Job Titles</a></span>
+	<span>Add New Job Title</span>
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<form method="post" action="<?php echo $this->url(array('controller'=>'job-title', 'action'=>'add')); ?>" id="addJobTitleForm">
+<div class="grid_12 t_a_bottom">Enter the user information in the form:</div>
+
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1">
+		<div class="clearfix t_a_bottom">
+			<label>Name:</label>
+			<input type="text" style="width: 200px" name="name" id="name" />
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Description:</label>
+			<input type="text" style="width: 200px" name="description" id="description" />
+		</div>
+
+		<hr />
+
+		<div class="clearfix">
+			<label>&nbsp;</label>
+			<input type="checkbox" name="lock" value="1" /> Lock this Job Title
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+			<button type="submit"><span>Create</span></button> or <a href="<?php echo $this->url(array('controller'=>'job-title', 'action'=>'list'), null, true)?>">Cancel</a>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Validate form
+	 */
+	$('#addJobTitleForm').validate({
+		rules: {
+			name: {
+				required: true
+			},
+			description: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	name: {
+	        	required: "<?php echo addslashes("The job title name is required"); ?>"
+			},
+			description: {
+	        	required: "<?php echo addslashes("The job title description is required"); ?>"
+			}
+		}
+	});
+});
+</script>

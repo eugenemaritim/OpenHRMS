@@ -1,0 +1,202 @@
+<?php
+
+$this->headLink()
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.core.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.resizable.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.dialog.css'))
+        ->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.tabs.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.theme.css'));
+
+$this->headScript()
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.core.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.widget.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.position.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.draggable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.resizable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.dialog.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.tabs.js'))
+	->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+<style>
+	.ui-autocomplete-loading { background: white url('<?php echo $this->staticUrl();?>/images/ui-anim_basic_16x16.gif') right center no-repeat; }
+</style>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+        <span><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'list'), null, true); ?>">List of Employees</a></span>
+	<span>View Employee</span>
+</div>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+<div class="grid_12 t_a_bottom">
+	<!-- Left column -->
+	<div class="grid_3 alpha">
+		<div class="t_a_ui_helper_line">
+			<h3>Info</h3>
+		</div>
+
+		<div class="t_a_ui_helper_box">
+			Name: <?php echo $this->employee->surname . ', ' . $this->employee->other_name; ?>
+                        <hr />
+                        <ul class="t_a_bottom">
+                            <li>Dept: <?php echo $this->department()->getDepartmentName($this->employee->dept_id);?></li>
+                            <li>Job Title: <?php echo $this->jobTitle()->getJobTitleName($this->employee->job_title); ?></li>
+                        </ul>
+		</div>
+                <div class="t_a_ui_helper_line" id="employee_nav">
+			<h3>HR Details</h3>
+                        <ul class="t_a_bottom">
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-personal-info'))?>">Personal Info</a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-employment-info'))?>">Employment Info</a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-remarks'))?>">Remarks</a></li>
+
+                        </ul>
+		</div>
+                <div class="t_a_ui_helper_line" id="employee_nav">
+                            <h3>Payroll Details</h3>
+                            <ul class="t_a_bottom">
+                                <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-benefits'))?>">Manage Benefits</a></li>
+                                <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-deductions'))?>">Manage Deductions</a></li>
+                                
+                            </ul>
+                </div>
+	</div>
+
+	<!-- Right column -->
+        <div class="grid_9 omega">
+		<div class="t_a_ui_tabs">
+			<div id="cacheTabs">
+				<ul>					
+					<li><a href="#EmpDetails"><span>Employment Details</span></a></li>                                        
+				</ul>
+				
+				<!-- Files cached -->
+				<div id="EmpDetails">
+                                    <form name="empDetails" id="empDetails" method="post" action="<?php echo $this->url(array('controller'=>'employee', 'action'=>'update-employment-details'))?>">
+                                        <input type="hidden" name="emp_id" value="<?php echo $this->employee->emp_id; ?>" />
+                                        <div class="prefix_1 suffix_1" id="empDetailsContainer">
+                                            <div class="t_a_ui_helper_line">
+                                                    <h3>Basic Pay</h3>
+                                            </div>
+                                            <div class="clearfix t_a_bottom">
+                                                <label>Payment Type:</label>
+                                                <select name="payment_type">
+                                                    <option value="salary" <?php if($this->details->payment_type == "salary") {echo ' selected="selected"';}?>>Salary</option>
+                                                    <option value="daily_rate"<?php if($this->details->payment_type == "daily_rate") {echo ' selected="selected"';}?>>Daily Rate</option>
+                                                    <option value="hourly_rate"<?php if($this->details->payment_type == "hourly_rate") {echo ' selected="selected"';}?>>Hourly Rate</option>
+                                                </select>
+                                            </div>
+
+                                            <hr />
+                                            <div class="clearfix t_a_bottom">
+                                                <label>Payment Amount:</label>
+                                                <input type="text" id="payment_amount" name="payment_amount" style="width: 200px" value="<?php echo $this->details->payment_amount; ?>" />
+                                            </div>
+                                            <div class="t_a_ui_helper_line">
+                                                    <h3>Standard Working Hours</h3>
+                                            </div>
+                                            <div class="clearfix t_a_bottom">
+                                                <label>Per Day:</label>
+                                                <input type="text" id="working_hours" name="working_hours" style="width: 200px" value="<?php echo $this->details->std_working_hours_day; ?>" />
+                                            </div>
+                                            <hr />
+                                            <div class="clearfix t_a_bottom">
+                                                <label>Per Pay Period:</label>
+                                                <input type="text" id="pay_period_hours" name="pay_period_hours" style="width: 200px" value="<?php echo $this->details->std_working_hours_period; ?>" />
+                                            </div>
+                                            <hr />
+                                            <div class="clearfix t_a_bottom">
+                                                <label>Time Worked:</label>
+                                                <select name="time_worked">
+                                                    <option value="standard"<?php if($this->details->time_worked == "standard") {echo ' selected="selected"';}?>>Assume Standard Hours</option>
+                                                    <option value="days_absent"<?php if($this->details->time_worked == "days_absent") {echo ' selected="selected"';}?>>Enter Days Absent</option>
+                                                    <option value="hours_absent"<?php if($this->details->time_worked == "hours_absent") {echo ' selected="selected"';}?>>Enter Hours Absent</option>
+                                                    <option value="days_present"<?php if($this->details->time_worked == "days_present") {echo ' selected="selected"';}?>>Enter Days Present</option>
+                                                    <option value="hours_present"<?php if($this->details->time_worked == "hours_present") {echo ' selected="selected"';}?>>Enter Hours Present</option>
+                                                </select>
+                                            </div>
+                                                                                
+                                            <hr />                                            
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>&nbsp;</label>
+                                                <?php echo $this->tokenElement; ?>
+                                                <button type="submit"><span>Save Changes</span></button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                </div>
+                                                           
+                        </div>
+                </div>
+        </div>
+</div>
+
+<div id="messageDialog"></div>
+
+<div id="confirmDialog"></div>
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+        /**
+	 * Create tabs
+	 */
+	$('#cacheTabs').tabs();
+
+	$('a.collapseAction').click(function() {
+		$('#tagRow_' + $(this).attr('id')).toggle();
+	});
+
+        $('#addCommentButton').click(function() {
+		var query = {
+			remark: $('#RemarkContainer').find('textarea[name="remark"]').attr('value')
+		};
+		QueryComments(query);
+	});
+
+
+        $('#saveInfo').click(function() {
+		var query = {
+			surname: $('#PersonalInfoContainer').find('input[name="surname"]').attr('value'),
+                        other_name: $('#PersonalInfoContainer').find('input[name="other_name"]').attr('value'),
+                        dept_id: $('#PersonalInfoContainer').find('select[name="dept_id"]:first').attr('value'),
+                        job_group: $('#PersonalInfoContainer').find('select[name="job_group"]:first').attr('value'),
+                        gender: $('#PersonalInfoContainer').find('select[name="gender"]:first').attr('value'),
+                        contact_cell: $('#PersonalInfoContainer').find('input[name="contact_cell"]').attr('value'),
+                        address: $('#PersonalInfoContainer').find('textarea[name="address"]').attr('value'),
+                        county: $('#PersonalInfoContainer').find('input[name="county"]').attr('value'),
+                        location: $('#PersonalInfoContainer').find('input[name="location"]').attr('value'),
+                        village_estate: $('#PersonalInfoContainer').find('input[name="village_estate"]').attr('value'),
+                        contact_person: $('#PersonalInfoContainer').find('input[name="contact_person"]').attr('value'),
+                        contact_person_no: $('#PersonalInfoContainer').find('input[name="contact_person_no"]').attr('value'),
+                        national_id_no: $('#PersonalInfoContainer').find('input[name="national_id_no"]').attr('value'),
+                        passport_no: $('#PersonalInfoContainer').find('input[name="passport_no"]').attr('value')
+		};
+		savePersonalDetails(query);
+	});
+});
+
+function QueryComments(query) {
+	$('#comments').html('').addClass('t_a_ui_helper_loading');
+	$.ajaxq('core_user', {
+		url: '<?php echo $this->url(array('controller'=>'employee', 'action'=>'add-comment')); ?>',
+		type: 'POST',
+		data: { query: $.toJSON(query) },
+		success: function(response) {
+			$('#comments').html(response).removeClass('t_a_ui_helper_loading').fadeIn('normal');
+		}
+	});
+ };
+
+function savePersonalDetails(query) {
+	$('#EmpInfo').html('').addClass('t_a_ui_helper_loading');
+	$.ajaxq('core_user', {
+		url: '<?php echo $this->url(array('controller'=>'employee', 'action'=>'update-personal-info')); ?>',
+		type: 'POST',
+		data: { query: $.toJSON(query) },
+		success: function(response) {
+			$('#EmpInfo').html(response).removeClass('t_a_ui_helper_loading').fadeIn('normal');
+		}
+	});
+}
+</script>

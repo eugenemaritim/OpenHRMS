@@ -1,0 +1,157 @@
+<?php
+
+$this->headLink()
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.core.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.resizable.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.dialog.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.theme.css'));
+
+$this->headScript()
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.core.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.draggable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.resizable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.dialog.js'))
+	->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span>List of Job Groups</span>
+</div>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<?php if ($this->job_groups) : ?>
+<div class="grid_12 t_a_bottom">
+    <div class="grid_9 alpha">Listing of Job Groups below:</div>
+
+<div class="grid_3 omega">
+	<div class="t_a_right">
+		<a href="<?php echo $this->url(array('controller'=>'job-group', 'action'=>'add')); ?>" class="t_a_ui_button_link"><span>Add New Job Group</span></a>
+	</div>
+</div>
+</div>
+
+<div class="grid_12 t_a_ui_data_list_header">
+	<div class="grid_4 alpha">
+		<div>Name</div>
+	</div>
+
+	<div class="grid_4">Description</div>
+
+	<div class="grid_2">Lock Status</div>
+
+	<div class="grid_2 omega"># of Employees</div>
+	
+</div>
+
+<div class="grid_12 t_a_bottom">
+	<?php foreach ($this->job_groups as $job_group) : ?>
+	<div class="clearfix t_a_ui_data_list_content" id="roleRow_<?php echo $job_group->id; ?>">
+		<div class="grid_4 alpha">
+			<div><?php echo $job_group->name; ?></div>
+
+			<div class="t_a_top t_a_ui_helper_action">
+				<a class="lockAction" rel="<?php echo $job_group->id; ?>_<?php echo $job_group->is_active; ?>_<?php echo $job_group->name; ?>" href="javascript: void(0);"><?php if ($job_group->is_active) : ?>Unlock<?php else : ?>Lock<?php endif; ?></a>
+                                <?php //@todo check employee number ?>
+				<?php  if (!$job_group->is_active) : ?> | <a class="editAction" href="/job-group/update/id/<?php echo $job_group->id; ?>">Update</a> | <a class="deleteAction" rel="<?php echo $job_group->id; ?>_<?php echo $job_group->name; ?>" href="javascript: void(0);">Delete</a><?php endif; ?>
+			</div>
+		</div>
+
+		<div class="grid_4"><?php echo $job_group->description; ?>&nbsp;</div>
+
+		<div class="grid_2"><?php if ($job_group->is_active) : ?>Locked<?php else : ?>Unlocked<?php endif; ?></div>
+
+		<div class="grid_1"><?php /* @todo No of employees here */ ?></div>
+		
+	</div>
+	<?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+<div id="messageDialog"></div>
+
+<div id="confirmDialog"></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+	$('a.lockAction').click(function() {
+		var self = this;
+		var arr = $(this).attr('rel').split('_');
+		$(self).html('').addClass('t_a_ui_helper_loading');
+		$.ajaxq('core_role', {
+			url: '<?php echo $this->url(array('controller'=>'job-group', 'action'=>'lock')); ?>',
+			type: 'POST',
+			data: { id: arr[0], lock: arr[1] },
+			success: function(response) {
+				$(self).attr('rel', arr[0] + '_' + response + '_' + arr[2]);
+				if (response == 1) {
+					$(self).html("Unlock");
+				} else {
+					$(self).html("Lock");
+				}
+				$(self).removeClass('t_a_ui_helper_loading');
+				$('#messageDialog').html((response == 1) ? sprintf('<?php echo addslashes("Job Group has been locked"); ?>', arr[2]) : sprintf('<?php echo addslashes("Job Group has been unlocked"); ?>', arr[2]))
+					.dialog({
+						title: '<?php echo addslashes("Notification"); ?>',
+						dialogClass: 't_a_ui_dialog',
+						modal: true,
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	});
+
+
+	$('a.deleteAction').click(function() {
+		var self = this;
+		$('#confirmDialog').html('<?php echo addslashes("Are you sure you want to delete this Job Group?"); ?>')
+			.dialog({
+				title: '<?php echo addslashes("Confirm delete"); ?>',
+				dialogClass: 't_a_ui_dialog',
+				modal: true,
+				closeOnEscape: false,
+				resizable: false,
+				open: function(event, ui) {
+					$('.ui-dialog-titlebar-close').hide();
+					$(this).parent().find('.ui-dialog-buttonpane button').wrapInner('<span/>');
+				},
+				buttons: {
+					'<?php echo addslashes("No"); ?>': function() {
+						$(this).dialog('destroy');
+					},
+					'<?php echo addslashes("Yes"); ?>': function() {
+						$(this).dialog('destroy');
+						$(self).html('&nbsp;').addClass('t_a_ui_helper_loading').css('text-decoration', 'none');
+						var arr = $(self).attr('rel').split('_');
+						$.ajaxq('core_role', {
+							url: '<?php echo $this->url(array('controller'=>'job-group', 'action'=>'delete')); ?>',
+							type: 'POST',
+							data: { id: arr[0] },
+							success: function(response) {
+								$('#roleRow_' + arr[0]).fadeOut('slow');
+								$('#messageDialog').html(sprintf('<?php echo addslashes("Job Group was successfully deleted"); ?>', arr[1]))
+									.dialog({
+										title: '<?php echo addslashes("Notification"); ?>',
+										dialogClass: 't_a_ui_dialog',
+										modal: true,
+								    	show: { effect: 'fade' },
+										open: function(event, ui) {
+											setTimeout(function() {
+												$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+											}, 3000);
+										}
+									});
+							}
+						});
+					}
+				}
+			});
+	});
+
+	
+});
+</script>

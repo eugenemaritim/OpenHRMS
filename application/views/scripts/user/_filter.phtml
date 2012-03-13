@@ -1,0 +1,32 @@
+<?php 
+
+?>
+<?php if (count($this->paginator) == 0) : ?>
+	No users matching selected criteria were found
+<?php else : ?>
+<?php foreach ($this->paginator as $user) : ?>
+<div class="clearfix t_a_ui_data_list_content">
+	<div class="grid_8 alpha">
+		<div><?php echo $user->user_name; ?></div>
+		
+		<div class="t_a_top t_a_ui_helper_action">
+					<a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'update','user_id' => $user->id)); ?>">Update</a>
+
+
+					<?php if ($user->user_name != $this->currentUser) : ?>
+					| <a class="activateAction" rel="<?php echo $user->id; ?>_<?php echo (int)$user->is_active; ?>_<?php echo $user->user_name; ?>" href="javascript: void(0);"><?php if ($user->is_active) : ?>De-Activate<?php else : ?>Activate<?php endif; ?></a>
+					| <a class="deleteAction" rel="<?php echo $user->id; ?>_<?php echo (int)$user->is_active; ?>_<?php echo $user->user_name; ?>" href="javascript: void(0);">Delete</a>
+                                        <?php endif; ?>
+                </div>
+	</div>
+
+	<div class="grid_3"><?php echo $user->email; ?></div>
+	
+	<div class="grid_1 omega"><?php echo $user->id; ?></div>
+</div>
+<?php endforeach; ?>
+
+<div class="t_a_bottom t_a_ui_paginator">
+	<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+</div>
+<?php endif; ?>

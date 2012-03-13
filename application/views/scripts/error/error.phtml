@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Error &rarr; OpenHR &rarr; Human Resource and Payroll Solution</title>
+        <link rel="stylesheet" href="<?php echo $this->staticUrl('/css/error.css') ?>"/>
+    </head>
+    <body>
+        <h2>An Error occured</h2>
+        <h3><?php echo $this->message ?></h3>
+        <?php if('development' == APPLICATION_ENV) {?>
+            <h4>Exception Information</h4>
+            <p>
+                <b>Message: </b> <?php echo $this->exception->getMessage() ?>
+            </p>
+            <h4>Stack trace: </h4>
+            <pre><?php echo $this->exception->getTraceAsString() ?>
+            </pre>
+        <?php } else { ?>
+
+        <?php } ?>
+    </body>
+</html>

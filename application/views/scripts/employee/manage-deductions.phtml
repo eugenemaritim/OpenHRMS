@@ -1,0 +1,131 @@
+<?php
+
+$this->headLink()
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.core.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.resizable.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.dialog.css'))
+        ->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.tabs.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.theme.css'));
+
+$this->headScript()
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.core.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.widget.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.position.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.draggable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.resizable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.dialog.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.tabs.js'))
+	->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+<style>
+	.ui-autocomplete-loading { background: white url('<?php echo $this->staticUrl();?>/images/ui-anim_basic_16x16.gif') right center no-repeat; }
+</style>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+        <span><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'list'), null, true); ?>">List of Employees</a></span>
+	<span>View Employee</span>
+</div>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+<div class="grid_12 t_a_bottom">
+	<!-- Left column -->
+	<div class="grid_3 alpha">
+		<div class="t_a_ui_helper_line">
+			<h3>Info</h3>
+		</div>
+
+		<div class="t_a_ui_helper_box">
+			Name: <?php echo $this->employee->surname . ', ' . $this->employee->other_name; ?>
+                        <hr />
+                        <ul class="t_a_bottom">
+                            <li>Dept: <?php echo $this->department()->getDepartmentName($this->employee->dept_id);?></li>
+                            <li>Job Title: <?php echo $this->jobTitle()->getJobTitleName($this->employee->job_title); ?></li>
+                        </ul>
+		</div>
+                <div class="t_a_ui_helper_line" id="employee_nav">
+			<h3>HR Details</h3>
+                        <ul class="t_a_bottom">
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-personal-info'))?>">Personal Info</a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-employment-info'))?>">Employment Info</a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-remarks'))?>">Remarks</a></li>
+
+                        </ul>
+		</div>
+                <div class="t_a_ui_helper_line" id="employee_nav">
+                            <h3>Payroll Details</h3>
+                            <ul class="t_a_bottom">
+                                <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-benefits'))?>">Manage Benefits</a></li>
+                                <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-deductions'))?>">Manage Deductions</a></li>
+                                
+                            </ul>
+                </div>
+	</div>
+
+	<!-- Right column -->
+        <div class="grid_9 omega">
+		<div class="t_a_ui_tabs">
+			<div id="cacheTabs">
+				<ul>
+                                        <li><a href="#EmpBenefits"><span>Employee Deductions</span></a></li>
+				</ul>
+
+				<!-- Files cached -->
+				<div id="EmpBenefits">
+                                    <form name="empDetails" id="empDetails" method="post" action="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-deductions'))?>">
+                                        <input type="hidden" name="emp_id" value="<?php echo $this->employee->emp_id; ?>" />
+                                        <div class="prefix_1 suffix_1" id="empDetailsContainer">
+                                            <div class="t_a_ui_helper_line">
+                                                    <h3>Deductions</h3>
+                                            </div>
+                                            <?php foreach($this->deductions as $deduction) { ?>
+                                            <div class="clearfix">
+                                                <label>&nbsp;</label>
+                                                <input type="checkbox" name="Deduction_<?php echo $deduction->id; ?>" value="Deduction_<?php echo $deduction->id; ?>"
+                                                <?php
+                                                foreach($this->emp_deductions as $ded) {
+                                                    switch($ded->deduction_id) {
+                                                    case $deduction->id:
+                                                            echo ' checked="checked"';
+                                                            break;
+                                                }
+                                                }
+                                                ?>
+                                                /> <?php echo $deduction->name; ?>
+                                            </div>
+                                            <hr />
+                                            <?php } ?>
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>&nbsp;</label>
+                                                <?php echo $this->tokenElement; ?>
+                                                <button type="submit"><span>Save Changes</span></button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                </div>
+
+                        </div>
+                </div>
+        </div>
+</div>
+
+<div id="messageDialog"></div>
+
+<div id="confirmDialog"></div>
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+        /**
+	 * Create tabs
+	 */
+	$('#cacheTabs').tabs();
+
+	$('a.collapseAction').click(function() {
+		$('#tagRow_' + $(this).attr('id')).toggle();
+	});
+
+});
+
+
+</script>

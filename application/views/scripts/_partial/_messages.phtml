@@ -1,0 +1,9 @@
+<?php if ($this->messages) : ?>
+<div class="t_a_ui_helper_message">
+	<ul>
+	<?php foreach ($this->messages as $msg) : ?>
+		<li><?php echo $msg; ?></li>
+	<?php endforeach; ?>
+	</ul>
+</div>
+<?php endif; ?>

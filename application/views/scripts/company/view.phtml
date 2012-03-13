@@ -1,0 +1,70 @@
+<?php
+
+$this->headScript()->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">	
+	<span>Company Details</span>
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<form method="post" action="<?php echo $this->url(array('controller'=>'company', 'action'=>'update')); ?>" id="CompanyDetailsForm">
+<div class="grid_12 t_a_bottom">Enter the company information in the form:</div>
+
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1">
+		<div class="clearfix t_a_bottom">
+			<label>Company Name:</label>
+			<input type="text" style="width: 200px" name="name" id="name" value="<?php echo $this->details->company_name; ?>" />
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Address:</label>
+			<input type="text" style="width: 200px" name="address" id="address" value="<?php echo $this->details->address; ?>"/>
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>Tel No:</label>
+			<input type="text" name="tel_no" style="width: 200px" id="tel_no" value="<?php echo $this->details->tel_no; ?>"/>
+		</div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+			<button type="submit"><span>Save Changes</span></button> or <a href="/">Cancel</a>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Validate form
+	 */
+	$('#addJobTitleForm').validate({
+		rules: {
+			name: {
+				required: true
+			},
+			description: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	name: {
+	        	required: "<?php echo addslashes("The job title name is required"); ?>"
+			},
+			description: {
+	        	required: "<?php echo addslashes("The job title description is required"); ?>"
+			}
+		}
+	});
+});
+</script>

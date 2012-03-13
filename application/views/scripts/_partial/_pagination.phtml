@@ -1,0 +1,37 @@
+<p>&nbsp;</p>
+<!-- First page link -->
+<?php if (isset($this->previous)): ?>
+	<span><?php echo $this->paginator()->buildLink($this->first, 'First', $this->paginatorOptions); ?></span>
+<?php else: ?>
+	<span class="t_a_ui_disable">First</span>
+<?php endif; ?>
+    
+<!-- Previous page link -->
+<?php if (isset($this->previous)): ?>
+	<span><?php echo $this->paginator()->buildLink($this->previous, 'Previous', $this->paginatorOptions); ?></span>
+<?php else: ?>
+	<span class="t_a_ui_disable">Previous</span>
+<?php endif; ?>
+
+<!-- Numbered page links -->
+<?php foreach ($this->pagesInRange as $page): ?>
+	<?php if ($page != $this->current): ?>
+	<span><?php echo $this->paginator()->buildLink($page, $page, $this->paginatorOptions); ?></span>
+    <?php else: ?>
+    <span class="t_a_ui_active"><?php echo $page; ?></span>
+	<?php endif; ?>
+<?php endforeach; ?>
+
+<!-- Next page link -->
+<?php if (isset($this->next)): ?>
+	<span><?php echo $this->paginator()->buildLink($this->next, 'Next', $this->paginatorOptions); ?></span>
+<?php else: ?>
+	<span class="t_a_ui_disable">Next</span>
+<?php endif; ?>
+
+<!-- Last page link -->
+<?php if (isset($this->next)): ?>
+	<span><?php echo $this->paginator()->buildLink($this->last, 'Last', $this->paginatorOptions); ?></span>
+<?php else: ?>
+	<span class="t_a_ui_disable">Last</span>
+<?php endif; ?>

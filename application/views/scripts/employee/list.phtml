@@ -1,0 +1,194 @@
+<?php
+
+$this->headLink()
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.core.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.resizable.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.dialog.css'))
+        ->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.tabs.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.theme.css'));
+
+$this->headScript()
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.core.js'))       
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.draggable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.resizable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.dialog.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.tabs.js'))        
+	->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+	<span>List of Employees</span>
+</div>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_9 alpha">You can use following conditions to filter the list of employees:</div>
+
+	<div class="grid_3 omega">
+		<div class="t_a_right">
+			<a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'add'), null, true); ?>" class="t_a_ui_button_link"><span>Add New Employee</span></a>
+		</div>
+	</div>
+</div>
+
+<!-- Filter form -->
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 suffix_1" id="filerContainer">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_5 alpha">
+				<label>Surname:</label>
+				<input type="text" style="width: 180px" name="last_name" />
+			</div>
+
+			<div class="grid_5 omega">
+				<label>Department:</label>
+				<select name="department" style="width: 180px">
+					<option value="">---</option>
+					<?php foreach ($this->departments as $dept) : ?>
+					<option value="<?php echo $dept->dept_id; ?>"><?php echo $dept->name; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		</div>
+                <hr />
+                <div class="clearfix t_a_bottom">
+                    <div class="grid_5 alpha">
+				<label>Job Title:</label>
+				<select name="job_title" style="width: 180px">
+					<option value="">---</option>
+					<?php foreach ($this->job_titles as $job_title) : ?>
+					<option value="<?php echo $job_title->id; ?>"><?php echo $job_title->name; ?></option>
+					<?php endforeach; ?>
+				</select>
+                    </div>
+                    <div class="grid_5 omega">
+				<label>Job Group:</label>
+				<select name="job_group" style="width: 180px">
+					<option value="">---</option>
+					<?php foreach ($this->job_groups as $job_group) : ?>
+					<option value="<?php echo $job_group->id; ?>"><?php echo $job_group->name; ?></option>
+					<?php endforeach; ?>
+				</select>
+                    </div>
+                </div>
+
+		<hr />
+
+		<div class="clearfix t_a_bottom">
+			<label>&nbsp;</label>
+			<button type="button" id="filterButton"><span>Filter</span></button>
+		</div>
+	</div>
+</div>
+
+<!-- List of users -->
+<?php if (count($this->employees) == 0) : ?>
+<div class="grid_12 t_a_bottom">There are no employees in the system</div>
+<?php else : ?>
+<div class="grid_12 t_a_bottom">Below is a list of employees</div>
+
+<div class="grid_12 t_a_ui_data_list_header">
+	<div class="grid_6 alpha">
+		<div>Employee Name</div>
+	</div>
+
+	<div class="grid_3">Department</div>
+
+	<div class="grid_3 omega">Job Title</div>
+</div>
+
+<div class="grid_12 t_a_bottom">
+	<div id="employees">
+		<?php foreach ($this->paginator as $emp) : ?>
+		<div class="clearfix t_a_ui_data_list_content">
+			<div class="grid_6 alpha">
+				<div><?php echo $emp->surname; ?>, <?php echo $emp->other_name?></div>
+
+				<div class="t_a_top t_a_ui_helper_action">
+                                        <a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-personal-info','emp' => $emp->emp_id)); ?>">View Employee</a>				
+										
+				</div>
+			</div>
+
+			<div class="grid_3"><?php echo $this->department()->getDepartmentName($emp->dept_id); ?><?php  ?></div>
+
+			<div class="grid_3 omega"><?php echo $this->jobTitle()->getJobTitleName($emp->job_title); ?></div>
+		</div>
+		<?php endforeach; ?>
+
+		<div class="t_a_bottom t_a_ui_paginator">
+			<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+		</div>
+	</div>
+</div>
+<?php endif; ?>
+
+<div id="messageDialog"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#filterButton').click(function() {
+		var query = {
+			last_name: $('#filerContainer').find('input[name="last_name"]:first').attr('value'),
+			department: $('#filerContainer').find('select[name="department"]:first').attr('value'),
+                        job_title: $('#filerContainer').find('select[name="job_title"]:first').attr('value'),
+                        job_group: $('#filerContainer').find('select[name="job_group"]:first').attr('value')
+
+		};
+		filterEmployees(1,query);
+	});
+
+
+	$('a.activateAction').click(function() {
+		activateUser(this);
+	});
+
+});
+
+function filterEmployees(page, query) {
+	query.pageIndex = page;
+	$('#employees').html('').addClass('t_a_ui_helper_loading');
+	$.ajaxq('core_user', {
+		url: '<?php echo $this->url(array('controller'=>'employee', 'action'=>'list')); ?>',
+		type: 'POST',
+		data: { query: $.toJSON(query) },
+		success: function(response) {
+			$('#employees').html(response).removeClass('t_a_ui_helper_loading').fadeIn('normal');
+		}
+	});
+};
+
+
+function activateUser(linkObj) {
+	var self = linkObj;
+	var arr = $(self).attr('rel').split('_');
+	$(self).html('').addClass('t_a_ui_helper_loading');
+	$.ajaxq('core_user', {
+		url: '<?php echo $this->url(array('controller'=>'user', 'action'=>'activate')); ?>',
+		type: 'POST',
+		data: { id: arr[0], status: arr[1] },
+		success: function(response) {
+			$(self).attr('rel', arr[0] + '_' + response + '_' + arr[2]);
+			if (response == 1) {
+				$(self).html("De Activate");
+			} else {
+				$(self).html("Activate");
+			}
+			$(self).removeClass('t_a_ui_helper_loading').fadeIn('normal');
+
+			$('#messageDialog').html((response == 1) ? sprintf('<?php echo addslashes('User was successfully activated'); ?>', arr[2]) : sprintf('<?php echo addslashes('User was successfully de-activated'); ?>', arr[2]))
+				.dialog({
+					title: '<?php echo addslashes('Notification'); ?>',
+					dialogClass: 't_a_ui_dialog',
+					modal: true,
+			    	show: { effect: 'fade' },
+					open: function(event, ui) {
+						setTimeout(function() {
+							$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+						}, 3000);
+					}
+				});
+		}
+	});
+};
+
+</script>

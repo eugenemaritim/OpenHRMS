@@ -1,0 +1,189 @@
+<?php echo $this->doctype(); ?>
+<html lang="en">
+<head>
+    <meta name="robots" content="noindex, nofollow" />
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headMeta(); ?>
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->staticUrl('/images/favicon.ico') ?>" />
+
+    <?php
+    $this->headLink()
+    	->prependStylesheet($this->staticUrl('/css/960/all.min.css'))
+    	->appendStylesheet($this->staticUrl('/css/admin.css'));
+
+    $this->headScript()
+    	->prependFile($this->staticUrl('/js/openhr/namespace.js'))
+    	->prependFile($this->staticUrl('/js/jquery/jquery.min.js'))
+    	->appendFile($this->staticUrl('/js/jquery.json/jquery.json.min.js'))
+    	->appendFile($this->staticUrl('/js/jquery.ajaxq/jquery.ajaxq.min.js'))
+    	->appendFile($this->staticUrl('/js/phpjs/php.full.min.js'))
+    	->appendFile($this->staticUrl('/js/jquery.hoverIntent/jquery.hoverIntent.minified.js'))
+    	->appendFile($this->staticUrl('/js/megamenu/megamenu.js'));
+
+    
+    ?>
+    <?php echo $this->headScript(); ?>
+    <?php echo $this->headLink(); ?>
+	
+    <!--[if lte IE 7]>
+	<link href="<?php $this->staticUrl() ?>/css/admin-ie.css" media="screen" rel="stylesheet" type="text/css" />	
+	<![endif]-->
+
+</head>
+<body>
+	<div id="t_a_body_wrapper" class="container_12">
+		<div id="t_a_body_container">
+			<!-- Header -->
+                        
+			<div id="t_a_header">
+				<div id="t_a_header_welcome">
+                                    
+                                        <?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
+						Hello <?php echo Zend_Auth::getInstance()->getIdentity()->full_name; ?> / <a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'profile')); ?>">My Profile</a> / <a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'logout')); ?>">Logout</a>
+					<?php endif; ?>
+                                    
+                                    
+                                </div>
+                            <div id="t_a_header_banner">
+                                OpenHRMS &rarr; Open Source Human Resource and Payroll Solution
+                            </div>
+				<div id="t_a_header_box_search">
+				</div>
+			</div>
+
+			<!-- Menu -->
+			<div id="menu">
+				<ul class="t_a_ui_mega_menu">
+					<li><a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>">Dashboard</a></li>
+					
+					<li>
+						<a href="#">Modules</a>
+						<div class="sub">
+                                                    <div class="row">
+                                                        <ul>
+									<li><span>Employees</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'list'), null, true); ?>">List of Employees</a></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'add'), null, true); ?>">Add an Employee</a></li>
+                                                        </ul>                                                        
+                                                        <div class="clearfix"><hr /></div>
+                                                        <ul>
+                                                            <li><span>Payroll</span></li>
+                                                            <li><a href="<?php echo $this->url(array('controller'=>'payroll', 'action'=>'run'), null, true); ?>">Run Payroll</a></li>
+                                                        </ul>
+                                                    </div>
+						</div>
+					</li>
+                                        <li>
+                                            <a href="#">Reports</a>
+                                            <div class="sub">
+                                                <div class="row">
+                                                    <ul>
+                                                        <li><span>Employees</span></li>
+                                                        <li><a href="<?php echo $this->url(array('controller'=>'report', 'action'=>'employee-list'), null, true); ?>">Generate Employee List</a></li>
+                                                        
+                                                    </ul>
+                                                    <div class="clearfix"><hr /></div>
+                                                    <ul>
+                                                        <li><span>Payroll</span></li>
+                                                        <li><a href="<?php echo $this->url(array('controller'=>'report', 'action'=>'generate-payslips'), null, true); ?>">Generate Payslips</a></li>
+
+                                                    </ul>
+                 
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+						<a href="#">Configurations</a>
+						<div class="sub">
+							<div class="row">
+                                                        <ul>
+									<li><span>Manage Users</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'role', 'action'=>'list'), null, true); ?>">Roles</a></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'list'), null, true); ?>">Users</a></li>
+                                                        </ul>
+                                                        <ul>
+									<li><span>Manage Company</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'company', 'action'=>'index'), null, true); ?>">View/Edit Company Details</a></li>
+                                                        </ul>
+                                                        <ul>
+									<li><span>Manage Departments</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'department', 'action'=>'list'), null, true); ?>">List of Departments</a></li>
+                                                                        <li><a href="<?php echo $this->url(array('controller'=>'department', 'action'=>'add'), null, true); ?>">Add a Department</a></li>
+                                                        </ul>
+                                                        <div class="clearfix"><hr /></div>
+                                                        <ul>
+                                                        <li><span>Manage Job Groups</span></li>
+                                                            <li><a href="<?php echo $this->url(array('controller'=>'job-group', 'action'=>'list'), null, true); ?>">List Job Groups</a></li>
+                                                            <li><a href="<?php echo $this->url(array('controller'=>'job-group', 'action'=>'add'), null, true); ?>">Add Job Group</a></li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li><span>Manage Job Titles</span></li>
+                                                            <li><a href="<?php echo $this->url(array('controller'=>'job-title', 'action'=>'list'), null, true); ?>">List Job Titles</a></li>
+                                                            <li><a href="<?php echo $this->url(array('controller'=>'job-title', 'action'=>'add'), null, true); ?>">Add Job Title</a></li>
+                                                        </ul>
+                                                        <ul>
+									<li><span>Banks</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'bank', 'action'=>'list'), null, true); ?>">List of Banks</a></li>
+                                                        </ul>
+                                                        <div class="clearfix"><hr /></div>
+                                                        <ul>
+									<li><span>Employee Benefits</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'benefit', 'action'=>'list'), null, true); ?>">List of Benefits</a></li>
+                                                                        <li><a href="<?php echo $this->url(array('controller'=>'benefit', 'action'=>'add'), null, true); ?>">Add Benefit</a></li>
+                                                        </ul>
+                                                        <ul>
+									<li><span>Employee Deductions</span></li>
+									<li><a href="<?php echo $this->url(array('controller'=>'deduction', 'action'=>'list'), null, true); ?>">List of Deductions</a></li>
+                                                                        <li><a href="<?php echo $this->url(array('controller'=>'deduction', 'action'=>'add'), null, true); ?>">Add Deduction</a></li>
+                                                        </ul>
+                                                        
+                                                        <div class="clearfix"><hr /></div>
+                                                        
+                                                    </div>
+						</div>
+					</li>
+					<li>
+						<a href="#">My Account</a>
+
+						<div class="sub" style="width: 140px !important; left: 0px">
+							<div class="row">
+                                                                <ul>
+									<li><a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'change-password')); ?>">Change Password</a></li>
+                                                                        <li><a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'profile'), null, true); ?>">My Profile</a></li>
+								</ul>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>	
+
+			<!-- Content -->
+			<div class="clearfix">
+				<?php echo $this->layout()->content; ?>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+
+		<!-- Footer -->
+		<div id="t_a_footer" class="container_12">
+      		<div class="grid_12">Powered by <a href="www.openhrms.net">OpenHRMS</a> version 1.0</div>
+    	</div>
+	</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Build menu
+	 */
+	$('ul.t_a_ui_mega_menu li.sub').css({'opacity':'0'});
+	$('ul.t_a_ui_mega_menu li').hoverIntent({
+		sensitivity: 2,
+		interval: 100,
+		over: megaHoverOver,
+		timeout: 200,
+		out: megaHoverOut
+	});
+});
+</script>
+</body>
+</html>

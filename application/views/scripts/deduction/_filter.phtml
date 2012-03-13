@@ -1,0 +1,25 @@
+<?php if (count($this->deductions) == 0) : ?>
+	No deductions matching selected criteria were found
+<?php else : ?>
+    <?php foreach ($this->deductions as $deduction) : ?>
+	<div class="clearfix t_a_ui_data_list_content" id="roleRow_<?php echo $deduction->id; ?>">
+		<div class="grid_2 alpha">
+			<div><?php echo $deduction->name; ?></div>
+
+			<div class="t_a_top t_a_ui_helper_action">
+				<a class="lockAction" rel="<?php echo $deduction->id; ?>_<?php echo $deduction->is_active; ?>_<?php echo $deduction->name; ?>" href="javascript: void(0);"><?php if ($deduction->is_active) : ?>Unlock<?php else : ?>Lock<?php endif; ?></a>
+				<?php  if (!$deduction->is_active) : ?> | <a class="editAction" href="/deduction/update/id/<?php echo $deduction->id; ?>">Edit</a> | <a class="deleteAction" rel="<?php echo $deduction->id; ?>_<?php echo $deduction->name; ?>" href="javascript: void(0);">Delete</a><?php endif; ?>
+			</div>
+		</div>
+
+		<div class="grid_4"><?php echo $deduction->description; ?>&nbsp;</div>
+
+                <div class="grid_2">Ksh <?php echo $deduction->amount; ?></div>
+
+		<div class="grid_1"><?php if ($deduction->is_active) : ?>Locked<?php else : ?>Unlocked<?php endif; ?></div>
+
+                <div class="grid_2"><?php echo $this->jobGroup()->getJobGroupName($deduction->job_group); ?></div>
+
+	</div>
+	<?php endforeach; ?>
+<?php endif; ?>

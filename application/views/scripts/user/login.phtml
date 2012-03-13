@@ -1,0 +1,72 @@
+<?php 
+$this->headScript()->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+
+<form action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>" method="post" id="loginForm" class="t_a_login_form">
+<div class="grid_8 prefix_2 suffix_2">
+	<h1>OpenHR</h1>
+	
+	<div class="grid_8 t_a_bottom">
+		<div class="grid_4 prefix_2 alpha"><?php echo $this->flashMessenger(); ?></div>
+	</div>
+	
+	<div class="grid_8 t_a_bottom">
+		<div class="grid_4 alpha">
+			<label>Username:</label>
+		</div>
+		<div class="grid_4 omega">
+			<label>Password:</label>
+		</div>
+	</div>
+		
+	<div class="grid_8 t_a_bottom">
+		<div class="grid_4 alpha">
+			<input type="text" name="username" id="username" />
+		</div>
+		<div class="grid_4 omega">
+			<input type="password" name="password" id="password" />
+		</div>
+	</div>
+	
+	<div class="grid_8">	
+		<?php
+		/**
+		 * Provide the link in case user forgot the password
+		 * @since 2.0.6
+		 */
+		?>
+		<div class="grid_4 alpha">
+			<a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'forgot-password')); ?>" class="t_a_ui_helper_arrow_right">Forgot Password</a>
+		</div>
+		<div class="grid_4 omega">
+			<button type="submit" class="t_a_right"><span>Login</span></button>
+		</div>
+	</div>
+</div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/**
+	 * Validate form
+	 */
+	$('#loginForm').validate({
+		rules: {
+			username: {
+		  		required: true
+			},
+			password: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	username: {
+	        	required: "Username is required"
+			},
+			password: {
+	        	required: "Password is required"
+			}
+		}
+	});
+});
+</script>

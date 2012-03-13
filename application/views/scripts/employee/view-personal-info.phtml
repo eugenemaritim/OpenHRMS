@@ -1,0 +1,296 @@
+<?php
+
+$this->headLink()
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.core.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.resizable.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.dialog.css'))
+        ->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.tabs.css'))
+	->appendStylesheet($this->staticUrl('/js/jquery.ui/themes/base/ui.theme.css'));
+
+$this->headScript()
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.core.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.widget.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.position.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.draggable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.resizable.js'))
+	->appendFile($this->staticUrl('/js/jquery.ui/ui.dialog.js'))
+        ->appendFile($this->staticUrl('/js/jquery.ui/ui.tabs.js'))
+	->appendFile($this->staticUrl('/js/jquery.validate/jquery.validate.min.js'));
+?>
+<style>
+	.ui-autocomplete-loading { background: white url('<?php echo $this->staticUrl();?>/images/ui-anim_basic_16x16.gif') right center no-repeat; }
+</style>
+
+<div class="grid_12 t_a_ui_breadcrumb">
+        <span><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'list'), null, true); ?>">List of Employees</a></span>
+	<span>View Employee</span>
+</div>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+<div class="grid_12 t_a_bottom">
+	<!-- Left column -->
+	<div class="grid_3 alpha">
+		<div class="t_a_ui_helper_line">
+			<h3>Info</h3>
+		</div>
+
+		<div class="t_a_ui_helper_box">
+			Name: <?php echo $this->employee->surname . ', ' . $this->employee->other_name; ?>
+                        <hr />
+                        <ul class="t_a_bottom">
+                            <li>Dept: <?php echo $this->department()->getDepartmentName($this->employee->dept_id);?></li>
+                            <li>Job Title: <?php echo $this->jobTitle()->getJobTitleName($this->employee->job_title); ?></li>
+                        </ul>
+		</div>
+                <div class="t_a_ui_helper_line" id="employee_nav">
+			<h3>HR Details</h3>
+                        <ul class="t_a_bottom">
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-personal-info'))?>">Personal Info</a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-employment-info'))?>">Employment Info</a></li>
+                            <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'view-remarks'))?>">Remarks</a></li>
+                           
+                        </ul>
+		</div>
+                <div class="t_a_ui_helper_line" id="employee_nav">
+                            <h3>Payroll Details</h3>
+                            <ul class="t_a_bottom">
+                                <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-benefits'))?>">Manage Benefits</a></li>
+                                <li><a href="<?php echo $this->url(array('controller'=>'employee', 'action'=>'manage-deductions'))?>">Manage Deductions</a></li>
+                                
+                            </ul>
+                </div>
+	</div>
+
+	<!-- Right column -->
+        <div class="grid_9 omega">
+		<div class="t_a_ui_tabs">
+			<div id="cacheTabs">
+				<ul>
+					<li><a href="#EmpInfo"><span>Personal Info</span></a></li>					
+				</ul>
+
+				<!-- Data cached -->
+				<div id="EmpInfo">
+                                    <form name="" id="" method="post" action="<?php echo $this->url(array('controller'=>'employee', 'action'=>'update-personal-info'))?>">
+                                    <div class="prefix_1 suffix_1" id="PersonalInfoContainer">
+                                        <input type="hidden" name="emp_id" value="<?php echo $this->employee->emp_id; ?>" />
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Surname:</label>
+                                                <input type="text" id="surname" name="surname" style="width: 200px" value="<?php echo $this->employee->surname; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Other Names:</label>
+                                                <input type="text" id="surname" name="other_name" style="width: 200px" value="<?php echo $this->employee->other_name; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Department:</label>
+                                                <select name="dept_id">
+                                                    <?php foreach($this->departments as $department) { ?>
+                                                    <option value="<?php echo $department->dept_id?>"
+                                                    <?php if($department->dept_id == $this->employee->dept_id) {echo ' selected="selected"';}?>
+                                                    ><?php echo $department->name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Job Title:</label>
+                                                <select name="job_title">
+                                                    <?php foreach($this->job_titles as $job_title) { ?>
+                                                    <option value="<?php echo $job_title->id?>"
+                                                    <?php if($job_title->id == $this->employee->job_title) {echo ' selected="selected"';}?>
+                                                    ><?php echo $job_title->name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Job Group:</label>
+                                                <select name="job_group">
+                                                    <?php foreach($this->job_groups as $job_group) { ?>
+                                                    <option value="<?php echo $job_group->id?>"
+                                                    <?php if($job_group->id == $this->employee->job_group) {echo ' selected="selected"';}?>
+                                                    ><?php echo $job_group->name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Gender:</label>
+                                                <select name="gender">
+                                                    <?php if($this->employee->gender) { ?>
+                                                        <option value="<?php echo $this->employee->gender;?>"><?php echo $this->employee->gender;?></option>
+                                                    <?php } ?>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                        </div>
+
+                                        <hr />
+
+                                         <div class="clearfix t_a_bottom">
+                                                <label>Contact Cell:</label>
+                                                <input type="text" id="contact_cell" name="contact_cell" style="width: 200px" value="<?php echo $this->employee->contact_cell; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>National ID No:</label>
+                                                <input type="text" id="national_id_no" name="national_id_no" style="width: 200px" value="<?php echo $this->employee->national_id_no; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Passport No:</label>
+                                                <input type="text" id="passport_no" name="passport_no" style="width: 200px" value="<?php echo $this->employee->passport_no; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="t_a_ui_helper_line">
+                                                    <h3>Bank Details</h3>
+                                        </div>
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Bank:</label>
+                                                <select name="bank_id">
+                                                    <option value="">---</option>
+                                                    <?php foreach($this->banks as $bank) { ?>
+                                                    <option value="<?php echo $bank->id?>"
+                                                    <?php if($bank->id == $this->employee->bank_id) {echo ' selected="selected"';}?>
+                                                    ><?php echo $bank->name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Bank Branch:</label>
+                                                <input type="text" id="bank_branch" name="bank_branch" style="width: 200px" value="<?php echo $this->employee->bank_branch; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Account Number:</label>
+                                                <input type="text" id="account_number" name="account_number" style="width: 200px" value="<?php echo $this->employee->account_number; ?>" />
+                                        </div>
+
+                                       <div class="t_a_ui_helper_line">
+                                                    <h3>Contact Details</h3>
+                                        </div>
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Address:</label>
+                                                <textarea name="address">
+                                                    <?php echo $this->employee->address; ?>
+                                                </textarea>
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>County:</label>
+                                                <input type="text" id="county" name="county" style="width: 200px" value="<?php echo $this->employee->county; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Location:</label>
+                                                <input type="text" id="location" name="location" style="width: 200px" value="<?php echo $this->employee->location; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Village / Address:</label>
+                                                <input type="text" id="village_estate" name="village_estate" style="width: 200px" value="<?php echo $this->employee->village_estate; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Emergency Contact:</label>
+                                                <input type="text" id="contact_person" name="contact_person" style="width: 200px" value="<?php echo $this->employee->contact_person; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>Contact Person No:</label>
+                                                <input type="text" id="contact_person_no" name="contact_person_no" style="width: 200px" value="<?php echo $this->employee->contact_person_no; ?>" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="clearfix t_a_bottom">
+                                                <label>&nbsp;</label>
+                                                <button type="submit" id="saveInfo"><span>Save Changes</span></button>
+                                        </div>
+
+
+                                    </div>
+                                </form>
+				</div>
+
+                        </div>
+                </div>
+        </div>
+</div>
+
+<div id="messageDialog"></div>
+
+<div id="confirmDialog"></div>
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+        /**
+	 * Create tabs
+	 */
+	$('#cacheTabs').tabs();
+
+	$('a.collapseAction').click(function() {
+		$('#tagRow_' + $(this).attr('id')).toggle();
+	});
+
+        $('#addCommentButton').click(function() {
+		var query = {
+			remark: $('#RemarkContainer').find('textarea[name="remark"]').attr('value')
+		};
+		QueryComments(query);
+	});
+
+
+        
+});
+
+function QueryComments(query) {
+	$('#comments').html('').addClass('t_a_ui_helper_loading');
+	$.ajaxq('core_user', {
+		url: '<?php echo $this->url(array('controller'=>'employee', 'action'=>'add-comment')); ?>',
+		type: 'POST',
+		data: { query: $.toJSON(query) },
+		success: function(response) {
+			$('#comments').html(response).removeClass('t_a_ui_helper_loading').fadeIn('normal');
+		}
+	});
+ };
+
+
+</script>
