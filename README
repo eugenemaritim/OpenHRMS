@@ -1,0 +1,72 @@
+OpenHRMS version 1.0 | Open Source Human Resource Solution
+=============================
+
+Thank you for taking the time to try OpenHRMS
+
+
+INSTALLATION
+------------
+
+Please make sure the release file is unpacked under a Web-accessible
+directory. You shall see the following files and directories:
+
+      application/               Application specific files
+      library/                   Application Library files
+      public/                    Publicly accessible content    
+      README               this file
+      
+
+
+REQUIREMENTS
+------------
+
+The minimum requirement by OpenHRMS is that your Web server supports
+PHP 5.1.0 or above. It has been tested with Apache HTTP server
+on Windows and Linux operating systems.
+
+
+QUICK START
+-----------
+
+Unzip the OpenHRMS file you have downloaded to your web server directory.
+
+Download a copy of the latest release of Zend Framework from 
+http://framework.zend.com. Unzip the file and copy the Zend folder
+located in the library folder to your library folder on the
+openhrms folder you unzipped in the previous step.
+
+OpenHRMS utilizes URL rewriting so you may need to change your apache 
+configuration.
+Create a virtual host configuration and set document root pointing to the public folder on the openhrms
+folder you had unzipped in step 1, otherwise OpenHRMS URL might break unexpectedly.
+Sample configuration can be found at http://apptools.com/phptools/virtualhost.php
+or try google for apache virtual host configuration. Just Make sure you documentRoot 
+points to the public folder.
+
+Import the database file openhrms.sql included in the folder into your 
+mysql database.
+Open the application configuration file located at 
+OpenHRMS/application/configs and edit the database connection section on the file application.ini
+to include your database connection credentials
+
+Enter the URL to your OpenHRMS installation and use the credentials 
+username: admin
+password: admin
+to login.
+
+If you encounter any error, email me at maritim [at] openhrms.net, I
+will try my best to help you.
+
+
+
+WHAT's NEXT
+-----------
+
+Please visit the project website at www.openhrms.net
+The applications publicly accessible repository is at https://github.com/eugenemaritim/OpenHRMS
+
+You can raise any issues on the applications github repository
+
+The OpenHRMS development Team
+www.openhrms.net
+info@openhrms.net
